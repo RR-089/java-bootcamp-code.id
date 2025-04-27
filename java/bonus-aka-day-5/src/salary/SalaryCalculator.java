@@ -2,6 +2,7 @@ package salary;
 
 import allowance.AllowanceCalculator;
 import allowance.SalaryDependentAllowanceCalculator;
+import preorder.IPreOrder;
 import tax.ITax;
 
 import java.time.LocalDate;
@@ -10,28 +11,26 @@ public class SalaryCalculator {
     private AllowanceCalculator allowanceCalculator;
     private SalaryDependentAllowanceCalculator salaryDependentAllowanceCalculator;
     private ITax tax;
+    private IPreOrder preOrder;
     private LocalDate payday;
 
     public SalaryCalculator(AllowanceCalculator allowanceCalculator,
                             SalaryDependentAllowanceCalculator salaryDependentAllowanceCalculator,
-                            ITax tax, LocalDate payday) {
+                            IPreOrder preOrder, ITax tax, LocalDate payday) {
         this.allowanceCalculator = allowanceCalculator;
         this.salaryDependentAllowanceCalculator = salaryDependentAllowanceCalculator;
+        this.preOrder = preOrder;
         this.tax = tax;
         this.payday = payday;
     }
 
     public double calculateTotalSalary(double baseSalary) {
         double totalSalary = baseSalary;
-        totalSalary -=
+        totalSalary +=
                 salaryDependentAllowanceCalculator.calculateTotalAllowances(baseSalary);
-        totalSalary -= allowanceCalculator.calculateTotalAllowances();
-        totalSalary -= tax.calculateTotalTax(baseSalary);
-
-        // TODO: Delete later
-        //System.out.println("Salary Dependent allowance: " + salaryDependentAllowanceCalculator.calculateTotalAllowances(baseSalary));
-        //System.out.println("Not Salary Dependent allowance: " + allowanceCalculator.calculateTotalAllowances());
-        //System.out.println("Tax: " + tax.calculateTotalTax(baseSalary));
+        totalSalary += allowanceCalculator.calculateTotalAllowances();
+        totalSalary += preOrder.calculateTotalPreOrder();
+        totalSalary -= tax.calculateTotalTax(totalSalary);
 
         return totalSalary;
     }

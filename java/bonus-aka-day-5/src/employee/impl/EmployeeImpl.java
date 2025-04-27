@@ -3,6 +3,7 @@ package employee.impl;
 import allowance.*;
 import constants.Status;
 import employee.Employee;
+import preorder.PreOrder;
 import salary.SalaryCalculator;
 import tax.Tax;
 
@@ -23,6 +24,7 @@ public class EmployeeImpl implements IEmployeeImpl {
                         new SalaryDependentAllowanceCalculator(List.of(
                                 new Insurance(1, 2, 2)
                         )),
+                        new PreOrder(0),
                         new Tax(1, 1, 0),
                         LocalDate.of(2025, 4, 30)
                 ));
@@ -37,6 +39,7 @@ public class EmployeeImpl implements IEmployeeImpl {
                         new SalaryDependentAllowanceCalculator(List.of(
                                 new Insurance(1, 3, 2)
                         )),
+                        new PreOrder(0),
                         new Tax(1, 1, 0),
                         LocalDate.of(2025, 4, 30)
                 ));
@@ -51,6 +54,7 @@ public class EmployeeImpl implements IEmployeeImpl {
                         new SalaryDependentAllowanceCalculator(List.of(
                                 new Insurance(1, 0, 2)
                         )),
+                        new PreOrder(0),
                         new Tax(1, 1, 0),
                         LocalDate.of(2025, 4, 30)
                 ));
@@ -65,6 +69,7 @@ public class EmployeeImpl implements IEmployeeImpl {
                         new SalaryDependentAllowanceCalculator(List.of(
                                 new Insurance(1, 0, 2)
                         )),
+                        new PreOrder(0),
                         new Tax(1, 1, 0),
                         LocalDate.of(2025, 4, 30)
                 ));
@@ -78,6 +83,7 @@ public class EmployeeImpl implements IEmployeeImpl {
                         ),
                         new SalaryDependentAllowanceCalculator(List.of(
                         )),
+                        new PreOrder(0),
                         new Tax(0, 0, 0),
                         LocalDate.of(2025, 4, 30)
                 ));
@@ -87,10 +93,10 @@ public class EmployeeImpl implements IEmployeeImpl {
                 Status.FREELANCE, 0,
                 new SalaryCalculator(
                         new AllowanceCalculator(List.of(
-                                new PreOrder(25_000_00)
                         )),
                         new SalaryDependentAllowanceCalculator(List.of(
                         )),
+                        new PreOrder(25_000_000),
                         new Tax(0, 0, 3),
                         LocalDate.of(2025, 4, 30)
                 ));

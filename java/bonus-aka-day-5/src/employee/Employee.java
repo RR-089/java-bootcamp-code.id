@@ -80,7 +80,6 @@ public class Employee {
                 ", baseSalary=" + String.format("%.2f", baseSalary) +
                 ", totalSalary=" + String.format("%.2f",
                 salaryCalculator.calculateTotalSalary(baseSalary)) +
-                ", totalAllowance=" + salaryCalculator.toString() +
                 '}';
     }
 }

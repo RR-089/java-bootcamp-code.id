@@ -1,6 +1,6 @@
-package allowance;
+package preorder;
 
-public class PreOrder implements IAllowance {
+public class PreOrder implements IPreOrder {
     private double paid;
 
     public PreOrder(double paid) {
@@ -9,7 +9,7 @@ public class PreOrder implements IAllowance {
 
 
     @Override
-    public double calculateTotalAllowance() {
+    public double calculateTotalPreOrder() {
         return paid;
     }
 }
