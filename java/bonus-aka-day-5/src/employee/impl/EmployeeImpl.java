@@ -10,7 +10,7 @@ import tax.Tax;
 import java.time.LocalDate;
 import java.util.List;
 
-public class EmployeeImpl implements IEmployeeImpl {
+public class EmployeeImpl implements IEmployee {
 
     @Override
     public List<Employee> initEmployess() {

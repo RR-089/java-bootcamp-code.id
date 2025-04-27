@@ -4,7 +4,7 @@ import employee.Employee;
 
 import java.util.List;
 
-public interface IEmployeeImpl {
+public interface IEmployee {
     List<Employee> initEmployess();
 
     void displayEmployess(List<Employee> employees);
