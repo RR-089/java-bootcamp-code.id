@@ -8,6 +8,14 @@ import tax.ITax;
 import java.time.LocalDate;
 
 public class SalaryCalculator {
+    /* TODO: Consider splitting the AllowanceCalculator into two distinct calculators:
+     * 1. NonSalaryDependentAllowanceCalculator: Calculates allowances that do not
+     * depend on the salary.
+     * 2. SalaryDependentAllowanceCalculator: Calculates allowances based on the salary.
+     * Alternatively, rename AllowanceCalculator to
+     * NonSalaryDependentAllowanceCalculator for clarity.
+     */
+
     private AllowanceCalculator allowanceCalculator;
     private SalaryDependentAllowanceCalculator salaryDependentAllowanceCalculator;
     private ITax tax;
