@@ -1,18 +1,17 @@
 package hr.impl;
 
-import allowance.impl.AllowanceImpl;
-import allowance.nonsalarydependentallowance.NonSalaryDependentAllowanceCalculatorImpl;
+import allowance.Allowance;
+import allowance.NonSalaryDependentAllowanceCalculator;
+import allowance.SalaryDependentAllowanceCalculator;
 import allowance.nonsalarydependentallowance.Operational;
 import allowance.nonsalarydependentallowance.Overtime;
 import allowance.salarydependentallowance.Insurance;
-import allowance.salarydependentallowance.SalaryDependentAllowanceCalculatorImpl;
 import constants.Status;
 import employee.Employee;
-import employee.impl.EmployeeImpl;
 import hr.HumanResource;
-import po.impl.PurchaseOrderImpl;
-import salary.impl.SalaryImpl;
-import tax.impl.TaxImpl;
+import po.PurchaseOrder;
+import salary.Salary;
+import tax.Tax;
 import tax.impl.TaxProjectImpl;
 import tax.impl.TaxSalaryImpl;
 
@@ -23,25 +22,25 @@ import java.util.List;
 public class HumanResourceImpl implements HumanResource {
     @Override
     public List<Employee> initEmployeeData() {
-        Employee emp1 = new EmployeeImpl(
+        Employee emp1 = new Employee(
                 100L, "Anton", LocalDate.of(2020, 2, 4),
                 Status.PERMANENT, 20_000_000, List.of(
-                new SalaryImpl(
-                        new AllowanceImpl(
-                                new NonSalaryDependentAllowanceCalculatorImpl(
+                new Salary(
+                        new Allowance(
+                                new NonSalaryDependentAllowanceCalculator(
                                         List.of(
                                                 new Overtime(10, 50_000),
                                                 new Operational(2, 30_000, 20_000)
                                         )
                                 ),
-                                new SalaryDependentAllowanceCalculatorImpl(
+                                new SalaryDependentAllowanceCalculator(
                                         List.of(
                                                 new Insurance(1, 2, 2)
                                         )
                                 )
                         ),
-                        new PurchaseOrderImpl(0),
-                        new TaxImpl(
+                        new PurchaseOrder(0),
+                        new Tax(
                                 new TaxProjectImpl(0),
                                 new TaxSalaryImpl(0.5f, 0.5f)
                         ),
@@ -50,24 +49,24 @@ public class HumanResourceImpl implements HumanResource {
         )
         );
 
-        Employee emp2 = new EmployeeImpl(
+        Employee emp2 = new Employee(
                 101L, "Budi", LocalDate.of(2021, 2, 4),
                 Status.PERMANENT, 15_000_000, List.of(
-                new SalaryImpl(
-                        new AllowanceImpl(
-                                new NonSalaryDependentAllowanceCalculatorImpl(
+                new Salary(
+                        new Allowance(
+                                new NonSalaryDependentAllowanceCalculator(
                                         List.of(
                                                 new Overtime(5, 50_000)
                                         )
                                 ),
-                                new SalaryDependentAllowanceCalculatorImpl(
+                                new SalaryDependentAllowanceCalculator(
                                         List.of(
                                                 new Insurance(1, 3, 2)
                                         )
                                 )
                         ),
-                        new PurchaseOrderImpl(0),
-                        new TaxImpl(
+                        new PurchaseOrder(0),
+                        new Tax(
                                 new TaxProjectImpl(0),
                                 new TaxSalaryImpl(0.5f, 0.5f)
                         ),
@@ -76,24 +75,24 @@ public class HumanResourceImpl implements HumanResource {
         )
         );
 
-        Employee emp3 = new EmployeeImpl(
+        Employee emp3 = new Employee(
                 102L, "Charlie", LocalDate.of(2022, 2, 4),
                 Status.CONTRACT, 15_000_000, List.of(
-                new SalaryImpl(
-                        new AllowanceImpl(
-                                new NonSalaryDependentAllowanceCalculatorImpl(
+                new Salary(
+                        new Allowance(
+                                new NonSalaryDependentAllowanceCalculator(
                                         List.of(
                                                 new Overtime(5, 45_000)
                                         )
                                 ),
-                                new SalaryDependentAllowanceCalculatorImpl(
+                                new SalaryDependentAllowanceCalculator(
                                         List.of(
                                                 new Insurance(1, 0, 2)
                                         )
                                 )
                         ),
-                        new PurchaseOrderImpl(0),
-                        new TaxImpl(
+                        new PurchaseOrder(0),
+                        new Tax(
                                 new TaxProjectImpl(0),
                                 new TaxSalaryImpl(0.5f, 0.5f)
                         ),
@@ -102,24 +101,24 @@ public class HumanResourceImpl implements HumanResource {
         )
         );
 
-        Employee emp4 = new EmployeeImpl(
+        Employee emp4 = new Employee(
                 103L, "Dian", LocalDate.of(2023, 2, 4),
                 Status.CONTRACT, 10_000_000, List.of(
-                new SalaryImpl(
-                        new AllowanceImpl(
-                                new NonSalaryDependentAllowanceCalculatorImpl(
+                new Salary(
+                        new Allowance(
+                                new NonSalaryDependentAllowanceCalculator(
                                         List.of(
                                                 new Overtime(6, 45_000)
                                         )
                                 ),
-                                new SalaryDependentAllowanceCalculatorImpl(
+                                new SalaryDependentAllowanceCalculator(
                                         List.of(
                                                 new Insurance(1, 0, 2)
                                         )
                                 )
                         ),
-                        new PurchaseOrderImpl(0),
-                        new TaxImpl(
+                        new PurchaseOrder(0),
+                        new Tax(
                                 new TaxProjectImpl(0),
                                 new TaxSalaryImpl(0.5f, 0.5f)
                         ),
@@ -128,23 +127,23 @@ public class HumanResourceImpl implements HumanResource {
         )
         );
 
-        Employee emp5 = new EmployeeImpl(
+        Employee emp5 = new Employee(
                 104L, "Gita", LocalDate.of(2024, 2, 4),
                 Status.TRAINEE, 0, List.of(
-                new SalaryImpl(
-                        new AllowanceImpl(
-                                new NonSalaryDependentAllowanceCalculatorImpl(
+                new Salary(
+                        new Allowance(
+                                new NonSalaryDependentAllowanceCalculator(
                                         List.of(
                                                 new Operational(25, 30_000, 20_000)
                                         )
                                 ),
-                                new SalaryDependentAllowanceCalculatorImpl(
+                                new SalaryDependentAllowanceCalculator(
                                         List.of(
                                         )
                                 )
                         ),
-                        new PurchaseOrderImpl(0),
-                        new TaxImpl(
+                        new PurchaseOrder(0),
+                        new Tax(
                                 new TaxProjectImpl(0),
                                 new TaxSalaryImpl(0, 0)
                         ),
@@ -153,22 +152,22 @@ public class HumanResourceImpl implements HumanResource {
         )
         );
 
-        Employee emp6 = new EmployeeImpl(
+        Employee emp6 = new Employee(
                 105L, "Rima", LocalDate.of(2025, 2, 4),
                 Status.FREELANCER, 0, List.of(
-                new SalaryImpl(
-                        new AllowanceImpl(
-                                new NonSalaryDependentAllowanceCalculatorImpl(
+                new Salary(
+                        new Allowance(
+                                new NonSalaryDependentAllowanceCalculator(
                                         List.of(
                                         )
                                 ),
-                                new SalaryDependentAllowanceCalculatorImpl(
+                                new SalaryDependentAllowanceCalculator(
                                         List.of(
                                         )
                                 )
                         ),
-                        new PurchaseOrderImpl(25_000_000),
-                        new TaxImpl(
+                        new PurchaseOrder(25_000_000),
+                        new Tax(
                                 new TaxProjectImpl(2.5f),
                                 new TaxSalaryImpl(0, 0)
                         ),
