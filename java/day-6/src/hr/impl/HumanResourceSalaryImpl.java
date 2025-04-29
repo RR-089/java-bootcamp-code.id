@@ -29,7 +29,8 @@ public class HumanResourceSalaryImpl implements HumanResourceSalary {
             List<Salary> salaries = employee.getSalaries();
 
             for (Salary salary : salaries) {
-                totalAllowance += salary.getAllowance().calcTotalAllTypeAllowances(employee.getSalary());
+                totalAllowance += salary.getAllowance().getNonSalaryDependentAllowanceCalculator().calcTotalAllAllowances();
+                totalAllowance += salary.getAllowance().getSalaryDependentAllowanceCalculator().calcTotalAllAllowances(employee.getSalary());
             }
         }
 
