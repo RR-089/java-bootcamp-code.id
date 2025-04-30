@@ -7,9 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.JdbcTypeCode;
-
-import java.sql.Types;
 
 @Data
 @NoArgsConstructor
@@ -32,9 +29,7 @@ public class Category {
     @Column(name = "description")
     private String description;
 
-    @Lob
-    @JdbcTypeCode(Types.BINARY)
-    @Column(name = "picture")
+    @Column(name = "picture", columnDefinition = "BYTEA")
     private byte[] picture;
 
 }

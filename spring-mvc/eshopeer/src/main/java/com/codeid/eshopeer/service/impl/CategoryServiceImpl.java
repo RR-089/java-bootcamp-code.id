@@ -4,7 +4,9 @@ import com.codeid.eshopeer.model.Category;
 import com.codeid.eshopeer.repository.CategoryRepository;
 import com.codeid.eshopeer.service.CategoryService;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,9 +29,16 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Category saveCategory(Category category) {
+    public Category saveCategory(Category category, MultipartFile picture) throws IOException {
+        if (!picture.isEmpty()) {
+            category.setPicture(picture.getBytes());
+        } else {
+            category.setPicture(null);
+        }
+
         return categoryRepository.save(category);
     }
+
 
     @Override
     public void deleteCategory(Long id) {
