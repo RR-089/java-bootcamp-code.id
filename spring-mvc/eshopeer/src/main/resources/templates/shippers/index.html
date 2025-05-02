@@ -5,42 +5,42 @@
 <th:block layout:fragment="content">
     <div class="container mt-4">
         <div class="text-center">
-            <h2 class="section-title px-5"><span class="px-2">Categories</span></h2>
+            <h2 class="section-title px-5"><span class="px-2">Shippers</span></h2>
         </div>
         <div class="alert alert-success text-start mb-3" role="alert" th:if="${message}">
             <span th:text="${message}"></span>
         </div>
         <div class="d-flex justify-content-between align-items-center mb-3">
             <span></span>
-            <a class="btn btn-primary" th:href="@{/categories/create}"
-            >Add New Category</a
+            <a class="btn btn-primary" th:href="@{/shippers/create}"
+            >Add New Shipper</a
             >
         </div>
         <table class="table table-bordered text-center mb-0">
             <thead class="bg-secondary text-dark">
             <tr>
                 <th>ID</th>
-                <th>Name</th>
-                <th>Description</th>
+                <th>Company Name</th>
+                <th>Phone</th>
                 <th>Action</th>
             </tr>
             </thead>
             <tbody class="align-middle">
-            <tr th:each="category : ${categories}">
-                <td th:text="${category.id}"></td>
-                <td th:text="${category.name}"></td>
-                <td th:text="${category.description ?: '-' }"></td>
+            <tr th:each="shipper : ${shippers}">
+                <td th:text="${shipper.id}"></td>
+                <td th:text="${shipper.companyName}"></td>
+                <td th:text="${shipper.phone ?: '-'}"></td>
                 <td>
                     <div class="input-group-btn">
                         <!-- Edit Icon -->
                         <a class="btn btn-sm btn-primary"
-                           th:href="@{/categories/update/{id}(id=${category.id})}">
+                           th:href="@{/shippers/update/{id}(id=${shipper.id})}">
                             <i class="fa fa-edit"></i>
                         </a>
 
                         <!-- Delete Icon -->
                         <a class="btn btn-sm btn-danger"
-                           th:href="@{/categories/delete/{id}(id=${category.id})}">
+                           th:href="@{/shippers/delete/{id}(id=${shipper.id})}">
                             <i class="fa fa-trash"></i>
                         </a>
                     </div>

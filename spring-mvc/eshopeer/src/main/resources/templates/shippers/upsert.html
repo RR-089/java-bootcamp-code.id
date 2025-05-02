@@ -1,0 +1,56 @@
+<html lang="en" layout:decorate="~{layout/main-layout}" with:title="create"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:with="http://www.thymeleaf.org/extras/with">
+<th:block layout:fragment="content">
+    <div class="container mt-4">
+        <div class="text-center">
+            <h2
+                    class="section-title px-5"><span class="px-2"
+                                                     th:text="${action}"></span></h2>
+        </div>
+
+        <div>
+            <form class="form" enctype="multipart/form-data" method="post"
+                  th:action="@{/shippers}"
+                  th:object="${shipper}">
+
+                <input
+                        id="id" placeholder="Shipper Id"
+                        th:field="*{id}"
+                        type="hidden"/>
+
+                <div class="control-group mb-3">
+                    <label for="company-name">Company Name:</label>
+                    <input class="form-control"
+                           data-validation-required-message="Please enter company name"
+                           id="company-name" placeholder="Company Name"
+                           required="required" th:field="*{companyName}"
+                           type="text"/>
+
+                    <div th:if="${#fields.hasErrors('companyName')}">
+                        <div class="text-danger" th:errors="*{companyName}"></div>
+                    </div>
+                </div>
+
+                <div class="control-group mb-3">
+                    <label for="phone">Phone:</label>
+                    <input class="form-control" id="phone"
+                           placeholder="Shipper's Phone"
+                           th:field="*{phone}"
+                           type="text"/>
+
+                    <div th:if="${#fields.hasErrors('phone')}">
+                        <div class="text-danger" th:errors="*{phone}"></div>
+                    </div>
+                </div>
+
+                <div>
+                    <button class="btn btn-primary py-2 px-4" id="sendMessageButton"
+                            th:text="${action}" type="submit"></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</th:block>
+</html>

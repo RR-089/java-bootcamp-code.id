@@ -1,5 +1,6 @@
 package com.codeid.eshopeer.controller;
 
+import com.codeid.eshopeer.advice.GlobalModelAttributes;
 import com.codeid.eshopeer.model.Category;
 import com.codeid.eshopeer.service.CategoryService;
 import jakarta.validation.Valid;
@@ -12,16 +13,17 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Optional;
 
 @Controller
 @RequestMapping("/categories")
 public class CategoryController {
     private final CategoryService categoryService;
+    private final GlobalModelAttributes globalModelAttributes;
 
-    public CategoryController(CategoryService categoryService) {
+    public CategoryController(CategoryService categoryService, GlobalModelAttributes globalModelAttributes) {
         this.categoryService = categoryService;
+        this.globalModelAttributes = globalModelAttributes;
     }
 
     @InitBinder
@@ -31,14 +33,11 @@ public class CategoryController {
 
     @GetMapping
     public String findAllCategories(Model model) {
-        commonAttributes(model);
         return "categories/index";
     }
 
     @GetMapping("/create")
     public String showCreateForm(Model model) {
-        commonAttributes(model);
-
         model.addAttribute("category", new Category());
         model.addAttribute("action", "Create Category");
         return "categories/upsert";
@@ -54,11 +53,16 @@ public class CategoryController {
             result.getAllErrors().forEach(error ->
                     System.out.println("Validation error: " + error.getDefaultMessage())
             );
+
+            String action = (category.getId() == null) ? "Create Category" : "Update Category";
+            model.addAttribute("action", action);
+
             return "categories/upsert";
         }
 
         try {
             categoryService.saveCategory(category, picture);
+            globalModelAttributes.refreshCache();
         } catch (IOException e) {
             result.rejectValue("picture", "error.category", "Failed to upload picture");
             return "categories/upsert";
@@ -73,7 +77,6 @@ public class CategoryController {
     public String showUpdateForm(@PathVariable("id") Long id, Model model) {
         Optional<Category> category = categoryService.findCategoryById(id);
 
-        commonAttributes(model);
         model.addAttribute("category", category.get());
         model.addAttribute("action", "Update Category");
         return "categories/upsert";
@@ -82,18 +85,12 @@ public class CategoryController {
     @GetMapping("/delete/{id}")
     public String deleteCategory(@PathVariable("id") Long id, RedirectAttributes redirectAttributes,
                                  Model model) {
-        commonAttributes(model);
         categoryService.deleteCategory(id);
+        globalModelAttributes.refreshCache();
         redirectAttributes.addFlashAttribute("message", "Category ID:  " + id +
-                " has been delete!");
+                " has been successfully deleted.");
 
         return "redirect:/categories";
-    }
-
-
-    private void commonAttributes(Model model) {
-        List<Category> categories = categoryService.findAllCategories();
-        model.addAttribute("categories", categories);
     }
 
 
