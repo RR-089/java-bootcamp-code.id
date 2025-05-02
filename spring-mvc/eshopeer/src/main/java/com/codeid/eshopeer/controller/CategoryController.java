@@ -2,6 +2,7 @@ package com.codeid.eshopeer.controller;
 
 import com.codeid.eshopeer.model.Category;
 import com.codeid.eshopeer.service.CategoryService;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -44,7 +45,7 @@ public class CategoryController {
     }
 
     @PostMapping
-    public String createCategory(@ModelAttribute("category") Category category,
+    public String createCategory(@Valid @ModelAttribute("category") Category category,
                                  BindingResult result,
                                  @RequestParam("picture") MultipartFile picture,
                                  Model model) {
