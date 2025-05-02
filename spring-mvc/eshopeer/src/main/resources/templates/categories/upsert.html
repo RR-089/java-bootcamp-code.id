@@ -1,0 +1,61 @@
+<html lang="en" layout:decorate="~{layout/main-layout}" with:title="create"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:with="http://www.thymeleaf.org/extras/with">
+<th:block layout:fragment="content">
+    <div class="container mt-4">
+        <div class="text-center">
+            <h2
+                    class="section-title px-5"><span class="px-2"
+                                                     th:text="${action}"></span></h2>
+        </div>
+
+        <div>
+            <form class="form" enctype="multipart/form-data" method="post"
+                  th:action="@{/categories}"
+                  th:object="${category}">
+
+                <input
+                        id="id" placeholder="Category Id"
+                        th:field="*{id}"
+                        type="hidden"/>
+
+                <div class="control-group mb-3">
+                    <label for="name">Name:</label>
+                    <input class="form-control"
+                           data-validation-required-message="Please enter category name"
+                           id="name" placeholder="Category Name"
+                           required="required" th:field="*{name}"
+                           type="text"/>
+
+                    <div th:if="${#fields.hasErrors('name')}">
+                        <div class="text-danger" th:errors="*{name}"></div>
+                    </div>
+                </div>
+
+                <div class="control-group mb-3">
+                    <label for="description">Description:</label>
+                    <input class="form-control" id="description"
+                           placeholder="Category Description"
+                           th:field="*{description}"
+                           type="text"/>
+
+                    <div th:if="${#fields.hasErrors('description')}">
+                        <div class="text-danger" th:errors="*{description}"></div>
+                    </div>
+                </div>
+
+                <div class="control-group mb-3">
+                    <label for="picture">Picture:</label>
+                    <input class="form-control" id="picture" name="picture" type="file"/>
+                </div>
+
+                <div>
+                    <button class="btn btn-primary py-2 px-4" id="sendMessageButton"
+                            th:text="${action}" type="submit"></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</th:block>
+</html>
