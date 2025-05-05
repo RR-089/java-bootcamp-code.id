@@ -30,10 +30,14 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category saveCategory(Category category, MultipartFile picture) throws IOException {
+        Category existingCategory = categoryRepository.findById(category.getId()).get();
+
         if (!picture.isEmpty()) {
             category.setPicture(picture.getBytes());
-        } else {
+        } else if (picture.isEmpty() && existingCategory.getPicture() == null) {
             category.setPicture(null);
+        } else {
+            category.setPicture(existingCategory.getPicture());
         }
 
         return categoryRepository.save(category);
