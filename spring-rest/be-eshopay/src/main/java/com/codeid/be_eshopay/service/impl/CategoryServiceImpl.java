@@ -3,13 +3,18 @@ package com.codeid.be_eshopay.service.impl;
 import com.codeid.be_eshopay.exception.BadRequestException;
 import com.codeid.be_eshopay.exception.NotFoundException;
 import com.codeid.be_eshopay.model.dto.CategoryDTO;
+import com.codeid.be_eshopay.model.dto.request.CategoryWithPictureRequestDTO;
+import com.codeid.be_eshopay.model.dto.response.CategoryWithPictureResponseDTO;
 import com.codeid.be_eshopay.model.entity.Category;
 import com.codeid.be_eshopay.repository.CategoryRepository;
 import com.codeid.be_eshopay.service.CategoryService;
+import com.codeid.be_eshopay.util.ImageUtil;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -91,5 +96,34 @@ public class CategoryServiceImpl implements CategoryService {
         );
 
         categoryRepository.deleteById(id);
+    }
+
+    @Transactional
+    @Override
+    public CategoryWithPictureResponseDTO createCategoryWithPicture(CategoryWithPictureRequestDTO request) {
+        try {
+            Category newCategory = Category.builder()
+                                           .name(request.getName())
+                                           .description(request.getDescription())
+                                           .picture(request.getPicture().getBytes()) // May throw IOException
+                                           .build();
+
+            Category createdCategory = categoryRepository.save(newCategory);
+
+            return CategoryWithPictureResponseDTO.builder()
+                                                 .id(createdCategory.getId())
+                                                 .name(createdCategory.getName())
+                                                 .description(createdCategory.getDescription())
+                                                 .picture(ImageUtil.convertToBase64(createdCategory.getPicture()))
+                                                 .build();
+        } catch (IOException e) {
+            throw new RuntimeException("Failed to process the image", e);
+        }
+    }
+
+    @Override
+    public CategoryWithPictureResponseDTO updateCategoryWithPicture(Long id, CategoryWithPictureRequestDTO request) {
+        //TODO: update category with image
+        return null;
     }
 }
