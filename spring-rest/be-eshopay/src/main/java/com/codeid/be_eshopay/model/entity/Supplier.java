@@ -11,24 +11,23 @@ import lombok.*;
 @RequiredArgsConstructor
 @Builder
 @Entity
-@Table(name = "shippers", schema = "oe")
-public class Shipper extends AbstractEntity {
+@Table(name = "suppliers", schema = "oe")
+public class Supplier extends AbstractEntity {
+
     @Id
     @SequenceGenerator(
-            name = "shipper_seq_gen",
-            sequenceName = "oe.shippers_shipper_id_seq",
+            name = "supplier_seq_gen",
+            sequenceName = "oe.suppliers_supplier_id_seq",
             allocationSize = 1
     )
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "shipper_seq_gen")
-    @Column(name = "shipper_id")
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "supplier_seq_gen"
+    )
+    @Column(name = "supplier_id")
     private Long id;
 
     @Nonnull
     @Column(name = "company_name", nullable = false)
     private String companyName;
-
-    @Column(name = "phone")
-    private String phone;
-
-
 }

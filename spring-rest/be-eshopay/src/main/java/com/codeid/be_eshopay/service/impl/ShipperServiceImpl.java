@@ -58,7 +58,6 @@ public class ShipperServiceImpl implements ShipperService {
     public ShipperDTO create(ShipperDTO entity) {
         log.debug("request to create shipper : {}", entity);
 
-
         return mapToDto(shipperRepository.save(mapToEntity(entity)));
     }
 
@@ -69,7 +68,7 @@ public class ShipperServiceImpl implements ShipperService {
 
         Shipper foundShipper = shipperRepository.findById(id).orElseThrow(
                 () -> new BadRequestException(String.format("Shipper with id: %s does " +
-                        "not exists", id), null)
+                        "not exist", id), null)
         );
 
         log.debug("request to update existing shipper : {}", foundShipper);
@@ -86,7 +85,7 @@ public class ShipperServiceImpl implements ShipperService {
 
         shipperRepository.findById(id).orElseThrow(
                 () -> new BadRequestException(String.format("Shipper with id: %s does " +
-                        "not exists", id), null)
+                        "not exist", id), null)
         );
 
         shipperRepository.deleteById(id);

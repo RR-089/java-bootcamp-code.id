@@ -68,7 +68,7 @@ public class CategoryServiceImpl implements CategoryService {
 
         Category foundCategory = categoryRepository.findById(id).orElseThrow(
                 () -> new BadRequestException(String.format("Category with id: %s does " +
-                        "not exists", id),
+                        "not exist", id),
                         null)
         );
 
@@ -87,7 +87,7 @@ public class CategoryServiceImpl implements CategoryService {
 
         categoryRepository.findById(id).orElseThrow(
                 () -> new BadRequestException(String.format("Category with id: %s does " +
-                        "not exists", id), null)
+                        "not exist", id), null)
         );
 
         categoryRepository.deleteById(id);
