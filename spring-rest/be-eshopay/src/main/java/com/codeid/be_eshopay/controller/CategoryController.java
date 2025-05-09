@@ -10,10 +10,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/categories")
@@ -56,4 +53,28 @@ public class CategoryController extends BaseCrudController<CategoryDTO, Long> {
         return ResponseEntity.status(statusCode).body(response);
 
     }
+
+
+    @PutMapping(value = "/{id}", consumes = "multipart/form-data")
+    public ResponseEntity<ResponseDTO<CategoryWithPictureResponseDTO>> createCategoryWithPicture(
+            @PathVariable("id") Long id,
+            @Valid @ModelAttribute CategoryWithPictureRequestDTO requestDTO
+    ) {
+
+        CategoryWithPictureResponseDTO data =
+                categoryService.updateCategoryWithPicture(id, requestDTO);
+
+
+        ResponseDTO<CategoryWithPictureResponseDTO> response =
+                ResponseDTO.<CategoryWithPictureResponseDTO>builder()
+                           .status(HttpStatus.OK.value())
+                           .message("Update category successful")
+                           .data(data)
+                           .build();
+
+        return ResponseEntity.ok(response);
+
+    }
+
+
 }

@@ -101,6 +101,8 @@ public class CategoryServiceImpl implements CategoryService {
     @Transactional
     @Override
     public CategoryWithPictureResponseDTO createCategoryWithPicture(CategoryWithPictureRequestDTO request) {
+        log.debug("request to create category with picture");
+
         try {
             Category newCategory = Category.builder()
                                            .name(request.getName())
@@ -117,13 +119,46 @@ public class CategoryServiceImpl implements CategoryService {
                                                  .picture(ImageUtil.convertToBase64(createdCategory.getPicture()))
                                                  .build();
         } catch (IOException e) {
-            throw new RuntimeException("Failed to process the image", e);
+            log.debug("request to create category with picture failed : {}", e.getMessage());
+
+            throw new BadRequestException("Failed to process the image", null);
         }
     }
 
+    @Transactional
     @Override
     public CategoryWithPictureResponseDTO updateCategoryWithPicture(Long id, CategoryWithPictureRequestDTO request) {
-        //TODO: update category with image
-        return null;
+        log.debug("request to update category with picture");
+
+        try {
+            Category foundCategory = categoryRepository.findById(id).orElseThrow(
+                    () -> new BadRequestException(String.format("Category with id: %s " +
+                            "not found", id), null)
+            );
+
+            foundCategory.setName(request.getName());
+            foundCategory.setDescription(request.getDescription());
+
+            if (request.getPicture() == null) {
+                foundCategory.setPicture(null);
+            } else {
+                foundCategory.setPicture(request.getPicture().getBytes());
+            }
+
+            Category updatedCategory = categoryRepository.save(foundCategory);
+
+
+            return CategoryWithPictureResponseDTO.builder()
+                                                 .id(updatedCategory.getId())
+                                                 .name(updatedCategory.getName())
+                                                 .description(updatedCategory.getDescription())
+                                                 .picture(ImageUtil.convertToBase64(updatedCategory.getPicture()))
+                                                 .build();
+        } catch (IOException e) {
+            log.debug("request to update category with picture failed : {}",
+                    e.getMessage());
+
+            throw new BadRequestException("Failed to process the image", null);
+        }
     }
 }
