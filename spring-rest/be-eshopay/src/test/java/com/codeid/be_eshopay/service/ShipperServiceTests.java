@@ -152,7 +152,7 @@ public class ShipperServiceTests {
         ShipperDTO result = shipperService.create(mockInputShipperDto);
 
         Assertions.assertNotNull(result);
-        Assertions.assertEquals(mockShipper.getId(), result.getId());
+        Assertions.assertEquals(mockExpectedShipperDto.getId(), result.getId());
         Assertions.assertEquals(mockExpectedShipperDto.getCompanyName(), result.getCompanyName());
         Assertions.assertEquals(mockExpectedShipperDto.getPhone(), result.getPhone());
 
@@ -182,6 +182,7 @@ public class ShipperServiceTests {
         ShipperDTO result = shipperService.update(mockId, mockInputShipperDto);
 
         Assertions.assertNotNull(result);
+        Assertions.assertEquals(mockExpectedShipperDto.getId(), result.getId());
         Assertions.assertEquals(mockExpectedShipperDto.getCompanyName(), result.getCompanyName());
         Assertions.assertEquals(mockExpectedShipperDto.getPhone(), result.getPhone());
 

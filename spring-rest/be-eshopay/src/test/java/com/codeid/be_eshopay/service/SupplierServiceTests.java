@@ -43,14 +43,14 @@ public class SupplierServiceTests {
 
     @Test
     void testMapToEntity_Success() {
-        SupplierDTO mockShipperDto =
+        SupplierDTO mockSupplierDto =
                 SupplierDTO.builder().id(1L).companyName("HP").build();
 
-        Supplier result = SupplierServiceImpl.mapToEntity(mockShipperDto);
+        Supplier result = SupplierServiceImpl.mapToEntity(mockSupplierDto);
 
         Assertions.assertNotNull(result);
-        Assertions.assertEquals(mockShipperDto.getId(), result.getId());
-        Assertions.assertEquals(mockShipperDto.getCompanyName(), result.getCompanyName());
+        Assertions.assertEquals(mockSupplierDto.getId(), result.getId());
+        Assertions.assertEquals(mockSupplierDto.getCompanyName(), result.getCompanyName());
     }
 
 
@@ -114,7 +114,7 @@ public class SupplierServiceTests {
     }
 
     @Test
-    void testFindById_ShipperNotFound() {
+    void testFindById_SupplierNotFound() {
         Long mockId = 1L;
 
         Mockito.when(supplierRepository.findById(mockId)).thenReturn(Optional.empty());
@@ -131,7 +131,7 @@ public class SupplierServiceTests {
     }
 
     @Test
-    void testCreateShipper_Success() {
+    void testCreateSupplier_Success() {
         Long mockId = 1L;
 
         SupplierDTO mockInputSupplierDto =
@@ -148,14 +148,14 @@ public class SupplierServiceTests {
         SupplierDTO result = supplierService.create(mockInputSupplierDto);
 
         Assertions.assertNotNull(result);
-        Assertions.assertEquals(mockSupplier.getId(), result.getId());
+        Assertions.assertEquals(mockExpectedSupplierDto.getId(), result.getId());
         Assertions.assertEquals(mockExpectedSupplierDto.getCompanyName(), result.getCompanyName());
 
         Mockito.verify(supplierRepository, Mockito.times(1)).save(Mockito.any(Supplier.class));
     }
 
     @Test
-    void testUpdateShipper_Success() {
+    void testUpdateSupplier_Success() {
         Long mockId = 1L;
         SupplierDTO mockInputSupplierDto =
                 SupplierDTO.builder().companyName("HP Extra").build();
@@ -177,6 +177,7 @@ public class SupplierServiceTests {
         SupplierDTO result = supplierService.update(mockId, mockInputSupplierDto);
 
         Assertions.assertNotNull(result);
+        Assertions.assertEquals(mockExpectedSupplierDto.getId(), result.getId());
         Assertions.assertEquals(mockExpectedSupplierDto.getCompanyName(), result.getCompanyName());
 
         Mockito.verify(supplierRepository, Mockito.times(1)).findById(mockId);
@@ -184,7 +185,7 @@ public class SupplierServiceTests {
     }
 
     @Test
-    void testUpdateShipper_BadRequest() {
+    void testUpdateSupplier_BadRequest() {
         Long mockId = 1L;
         SupplierDTO mockInputSupplierDto =
                 SupplierDTO.builder().companyName("HP Extra").build();
@@ -204,7 +205,7 @@ public class SupplierServiceTests {
     }
 
     @Test
-    void testDeleteShipper_Success() {
+    void testDeleteSupplier_Success() {
         Long mockId = 1L;
 
         Supplier mockExistingSupplier =
@@ -221,7 +222,7 @@ public class SupplierServiceTests {
     }
 
     @Test
-    void testDeleteShipper_BadRequest() {
+    void testDeleteSupplier_BadRequest() {
         Long mockId = 1L;
 
         Mockito.when(supplierRepository.findById(mockId)).thenReturn(Optional.empty());
