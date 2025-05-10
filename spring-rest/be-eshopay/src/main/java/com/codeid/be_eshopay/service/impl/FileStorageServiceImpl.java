@@ -71,4 +71,24 @@ public class FileStorageServiceImpl implements FileStorageService {
             throw new Exception("File not found: " + fileName, ex);
         }
     }
+
+    @Override
+    public void deleteFile(String fileName) throws Exception {
+        try {
+            if (fileName.contains("..")) {
+                throw new Exception("Invalid file name: " + fileName);
+            }
+
+            Path filePath = this.fileStorageLocation.resolve(fileName).normalize();
+
+            if (!Files.exists(filePath)) {
+                throw new Exception("File not found: " + fileName);
+            }
+
+            Files.delete(filePath);
+        } catch (IOException ex) {
+            throw new Exception("Failed to delete file: " + fileName, ex);
+        }
+    }
+
 }

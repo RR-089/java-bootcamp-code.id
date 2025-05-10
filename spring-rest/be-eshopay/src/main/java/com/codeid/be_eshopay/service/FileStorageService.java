@@ -7,4 +7,6 @@ public interface FileStorageService {
     String storeFileWithRandomName(MultipartFile file) throws Exception;
 
     Resource loadFile(String fileName) throws Exception;
+
+    void deleteFile(String fileName) throws Exception;
 }
