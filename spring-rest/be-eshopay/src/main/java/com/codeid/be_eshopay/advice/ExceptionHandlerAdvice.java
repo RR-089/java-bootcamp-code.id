@@ -5,9 +5,14 @@ import com.codeid.be_eshopay.model.dto.ResponseDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 @RestControllerAdvice
@@ -43,6 +48,24 @@ public class ExceptionHandlerAdvice {
         );
     }
 
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ResponseDTO<Object>> handleValidationException(MethodArgumentNotValidException ex) {
+        final HttpStatus statusCode = HttpStatus.BAD_REQUEST;
+
+        Map<String, String> errors = new HashMap<>();
+        for (FieldError error : ex.getBindingResult().getFieldErrors()) {
+            errors.put(error.getField(), error.getDefaultMessage());
+        }
+
+        return ResponseEntity.status(statusCode).body(
+                ResponseDTO.builder()
+                           .status(statusCode.value())
+                           .message("Validation failed")
+                           .data(errors)
+                           .build()
+        );
+    }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ResponseDTO<Object>> handleGlobalException(Exception ex) {
