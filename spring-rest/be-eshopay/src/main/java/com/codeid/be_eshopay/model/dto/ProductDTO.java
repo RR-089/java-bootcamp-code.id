@@ -1,9 +1,6 @@
 package com.codeid.be_eshopay.model.dto;
 
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.Builder;
 import lombok.Data;
 
@@ -39,9 +36,9 @@ public class ProductDTO {
 
     private String thumbnailPicture;
 
-    @NotBlank
+    @NotNull
     private SupplierDTO supplier;
 
-    @NotBlank
+    @NotNull
     private CategoryDTO category;
 }
