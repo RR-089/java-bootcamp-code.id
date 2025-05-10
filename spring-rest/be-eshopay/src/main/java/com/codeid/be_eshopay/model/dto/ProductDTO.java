@@ -1,5 +1,6 @@
 package com.codeid.be_eshopay.model.dto;
 
+import com.codeid.be_eshopay.annotation.HasId;
 import jakarta.validation.constraints.*;
 import lombok.Builder;
 import lombok.Data;
@@ -37,18 +38,11 @@ public class ProductDTO {
     private String thumbnailPicture;
 
     @NotNull
+    @HasId
     private SupplierDTO supplier;
 
     @NotNull
+    @HasId
     private CategoryDTO category;
 
-    @AssertTrue(message = "Supplier 'id' must not be null")
-    public boolean isSupplierId() {
-        return supplier != null && supplier.getId() != null;
-    }
-
-    @AssertTrue(message = "Category 'id' must not be null")
-    public boolean isCategoryId() {
-        return category != null && category.getId() != null;
-    }
 }
