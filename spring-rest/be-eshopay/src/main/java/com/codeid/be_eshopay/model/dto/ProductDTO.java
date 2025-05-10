@@ -39,7 +39,9 @@ public class ProductDTO {
 
     private String thumbnailPicture;
 
+    @NotBlank
     private SupplierDTO supplier;
 
+    @NotBlank
     private CategoryDTO category;
 }
