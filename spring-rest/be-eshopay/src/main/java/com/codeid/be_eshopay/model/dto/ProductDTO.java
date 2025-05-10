@@ -41,4 +41,14 @@ public class ProductDTO {
 
     @NotNull
     private CategoryDTO category;
+
+    @AssertTrue(message = "Supplier 'id' must not be null")
+    public boolean isSupplierId() {
+        return supplier != null && supplier.getId() != null;
+    }
+
+    @AssertTrue(message = "Category 'id' must not be null")
+    public boolean isCategoryId() {
+        return category != null && category.getId() != null;
+    }
 }
