@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 @Slf4j
 @RestControllerAdvice
@@ -26,6 +27,22 @@ public class ExceptionHandlerAdvice {
                            .build()
         );
     }
+
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public ResponseEntity<ResponseDTO<Object>> handleMaxSizeException(
+            MaxUploadSizeExceededException ex) {
+
+        final HttpStatus statusCode = HttpStatus.PAYLOAD_TOO_LARGE;
+
+        return ResponseEntity.status(statusCode).body(
+                ResponseDTO.builder()
+                           .status(statusCode.value())
+                           .message("The uploaded file exceeds the maximum allowed size")
+                           .data(null)
+                           .build()
+        );
+    }
+
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ResponseDTO<Object>> handleGlobalException(Exception ex) {
