@@ -100,7 +100,6 @@ public class ProductController extends BaseMultipartAndCrudController<ProductDTO
 
             if (!file.isEmpty()) {
                 fileName = fileStorageService.storeFileWithRandomName(file);
-                fileStorageService.deleteFile(foundProduct.getThumbnailPicture());
             }
 
             fileStorageService.deleteFile(foundProduct.getThumbnailPicture());

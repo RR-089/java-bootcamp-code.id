@@ -75,6 +75,10 @@ public class FileStorageServiceImpl implements FileStorageService {
     @Override
     public void deleteFile(String fileName) throws Exception {
         try {
+            if (fileName == null || fileName.trim().isEmpty()) {
+                return;
+            }
+
             if (fileName.contains("..")) {
                 throw new Exception("Invalid file name: " + fileName);
             }
