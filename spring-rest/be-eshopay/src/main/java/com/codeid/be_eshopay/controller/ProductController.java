@@ -122,7 +122,7 @@ public class ProductController extends BaseMultipartAndCrudController<ProductDTO
 
             ResponseDTO<ProductDTO> response = ResponseDTO.<ProductDTO>builder()
                                                           .status(statusCode.value())
-                                                          .message("Save image failed")
+                                                          .message("Update failed")
                                                           .data(null)
                                                           .build();
 
