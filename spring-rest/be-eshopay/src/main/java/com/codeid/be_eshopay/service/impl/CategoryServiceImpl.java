@@ -3,6 +3,7 @@ package com.codeid.be_eshopay.service.impl;
 import com.codeid.be_eshopay.exception.BadRequestException;
 import com.codeid.be_eshopay.exception.NotFoundException;
 import com.codeid.be_eshopay.model.dto.CategoryDTO;
+import com.codeid.be_eshopay.model.dto.PaginationDTO;
 import com.codeid.be_eshopay.model.dto.request.CategoryWithPictureRequestDTO;
 import com.codeid.be_eshopay.model.dto.response.CategoryWithPictureResponseDTO;
 import com.codeid.be_eshopay.model.entity.Category;
@@ -12,11 +13,12 @@ import com.codeid.be_eshopay.util.ImageUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -41,12 +43,19 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<CategoryDTO> findAll() {
+    public PaginationDTO<List<CategoryDTO>> findAll(Pageable pageable) {
         log.debug("request fetching data categories");
 
-        return categoryRepository.findAll().stream()
-                                 .map(CategoryServiceImpl::mapToDto)
-                                 .collect(Collectors.toList());
+        Page<Category> categoryPage = categoryRepository.findAll(pageable);
+
+        List<CategoryDTO> categoryDtoList = categoryPage.getContent()
+                                                        .stream().map(CategoryServiceImpl::mapToDto)
+                                                        .toList();
+
+        return PaginationDTO.<List<CategoryDTO>>builder()
+                            .totalRecords(categoryPage.getTotalElements())
+                            .data(categoryDtoList)
+                            .build();
     }
 
     @Override

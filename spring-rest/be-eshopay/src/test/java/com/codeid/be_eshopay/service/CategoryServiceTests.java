@@ -3,6 +3,7 @@ package com.codeid.be_eshopay.service;
 import com.codeid.be_eshopay.exception.BadRequestException;
 import com.codeid.be_eshopay.exception.NotFoundException;
 import com.codeid.be_eshopay.model.dto.CategoryDTO;
+import com.codeid.be_eshopay.model.dto.PaginationDTO;
 import com.codeid.be_eshopay.model.dto.request.CategoryWithPictureRequestDTO;
 import com.codeid.be_eshopay.model.dto.response.CategoryWithPictureResponseDTO;
 import com.codeid.be_eshopay.model.entity.Category;
@@ -16,6 +17,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -60,7 +65,8 @@ public class CategoryServiceTests {
 
 
     @Test
-    void testFindAll_ReturnCategoryDTOList() {
+    void testFindAll_ReturnPaginationDTO() {
+
         List<Category> mockCategories = List.of(
                 Category.builder().id(1L).name("Electronic").description("this is " +
                         "electronic").build(),
@@ -69,37 +75,46 @@ public class CategoryServiceTests {
                         "beverage").build()
         );
 
-        Mockito.when(categoryRepository.findAll()).thenReturn(mockCategories);
+        Page<Category> mockPage = new PageImpl<>(mockCategories);
+        Pageable mockPageable = PageRequest.of(0, 3);
 
-        List<CategoryDTO> result = categoryService.findAll();
+        Mockito.when(categoryRepository.findAll(mockPageable)).thenReturn(mockPage);
+
+        PaginationDTO<List<CategoryDTO>> result = categoryService.findAll(mockPageable);
 
         Assertions.assertNotNull(result);
-        Assertions.assertEquals(3, result.size());
+        Assertions.assertEquals(3, result.getData().size());
 
         for (int i = 0; i < mockCategories.size(); i++) {
             Category mockEntity = mockCategories.get(i);
-            CategoryDTO entityDto = result.get(i);
+            CategoryDTO entityDto = result.getData().get(i);
 
             Assertions.assertEquals(mockEntity.getId(), entityDto.getId());
             Assertions.assertEquals(mockEntity.getName(), entityDto.getName());
             Assertions.assertEquals(mockEntity.getDescription(), entityDto.getDescription());
         }
 
-        Mockito.verify(categoryRepository, Mockito.times(1)).findAll();
+        Mockito.verify(categoryRepository, Mockito.times(1))
+               .findAll(mockPageable);
     }
 
 
     @Test
-    void testFindAll_ReturnEmptyList() {
+    void testFindAll_ReturnPaginationDTOEmptyList() {
         List<Category> mockCategories = new ArrayList<>();
-        Mockito.when(categoryRepository.findAll()).thenReturn(mockCategories);
 
-        List<CategoryDTO> result = categoryService.findAll();
+        Page<Category> mockPage = new PageImpl<>(mockCategories);
+        Pageable mockPageable = PageRequest.of(0, 3);
+
+        Mockito.when(categoryRepository.findAll(mockPageable)).thenReturn(mockPage);
+
+        PaginationDTO<List<CategoryDTO>> result = categoryService.findAll(mockPageable);
 
         Assertions.assertNotNull(result);
-        Assertions.assertTrue(result.isEmpty());
+        Assertions.assertTrue(result.getData().isEmpty());
 
-        Mockito.verify(categoryRepository, Mockito.times(1)).findAll();
+        Mockito.verify(categoryRepository, Mockito.times(1))
+               .findAll(mockPageable);
     }
 
 

@@ -2,16 +2,18 @@ package com.codeid.be_eshopay.service.impl;
 
 import com.codeid.be_eshopay.exception.BadRequestException;
 import com.codeid.be_eshopay.exception.NotFoundException;
+import com.codeid.be_eshopay.model.dto.PaginationDTO;
 import com.codeid.be_eshopay.model.dto.SupplierDTO;
 import com.codeid.be_eshopay.model.entity.Supplier;
 import com.codeid.be_eshopay.repository.SupplierRepository;
 import com.codeid.be_eshopay.service.SupplierService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -34,12 +36,19 @@ public class SupplierServiceImpl implements SupplierService {
     }
 
     @Override
-    public List<SupplierDTO> findAll() {
+    public PaginationDTO<List<SupplierDTO>> findAll(Pageable pageable) {
         log.debug("request fetching data suppliers");
 
-        return supplierRepository.findAll().stream()
-                                 .map(SupplierServiceImpl::mapToDto)
-                                 .collect(Collectors.toList());
+        Page<Supplier> supplierPage = supplierRepository.findAll(pageable);
+
+        List<SupplierDTO> supplierDtoList = supplierPage.stream()
+                                                        .map(SupplierServiceImpl::mapToDto)
+                                                        .toList();
+
+        return PaginationDTO.<List<SupplierDTO>>builder()
+                            .totalRecords(supplierPage.getTotalElements())
+                            .data(supplierDtoList)
+                            .build();
     }
 
     @Override

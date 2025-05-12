@@ -2,16 +2,18 @@ package com.codeid.be_eshopay.service.impl;
 
 import com.codeid.be_eshopay.exception.BadRequestException;
 import com.codeid.be_eshopay.exception.NotFoundException;
+import com.codeid.be_eshopay.model.dto.PaginationDTO;
 import com.codeid.be_eshopay.model.dto.ShipperDTO;
 import com.codeid.be_eshopay.model.entity.Shipper;
 import com.codeid.be_eshopay.repository.ShipperRepository;
 import com.codeid.be_eshopay.service.ShipperService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -37,11 +39,18 @@ public class ShipperServiceImpl implements ShipperService {
 
 
     @Override
-    public List<ShipperDTO> findAll() {
+    public PaginationDTO<List<ShipperDTO>> findAll(Pageable pageable) {
         log.debug("request fetching data shippers");
 
-        return shipperRepository.findAll().stream().map(ShipperServiceImpl::mapToDto)
-                                .collect(Collectors.toList());
+        Page<Shipper> shipperPage = shipperRepository.findAll(pageable);
+
+        List<ShipperDTO> shipperDtoList = shipperPage.stream()
+                                                     .map(ShipperServiceImpl::mapToDto)
+                                                     .toList();
+        return PaginationDTO.<List<ShipperDTO>>builder()
+                            .totalRecords(shipperPage.getTotalElements())
+                            .data(shipperDtoList)
+                            .build();
     }
 
     @Override

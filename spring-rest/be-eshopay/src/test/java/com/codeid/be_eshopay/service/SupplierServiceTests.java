@@ -2,6 +2,7 @@ package com.codeid.be_eshopay.service;
 
 import com.codeid.be_eshopay.exception.BadRequestException;
 import com.codeid.be_eshopay.exception.NotFoundException;
+import com.codeid.be_eshopay.model.dto.PaginationDTO;
 import com.codeid.be_eshopay.model.dto.SupplierDTO;
 import com.codeid.be_eshopay.model.entity.Supplier;
 import com.codeid.be_eshopay.repository.SupplierRepository;
@@ -13,6 +14,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 
 import java.util.ArrayList;
@@ -55,43 +60,55 @@ public class SupplierServiceTests {
 
 
     @Test
-    void testFindAll_ReturnSupplierDTOList() {
+    void testFindAll_ReturnPaginationDTO() {
         List<Supplier> mockSuppliers = List.of(
                 Supplier.builder().id(1L).companyName("HP").build(),
                 Supplier.builder().id(2L).companyName("LG").build(),
                 Supplier.builder().id(3L).companyName("Sony").build()
         );
 
-        Mockito.when(supplierRepository.findAll()).thenReturn(mockSuppliers);
+        Page<Supplier> mockPage = new PageImpl<>(mockSuppliers);
+        Pageable mockPageable = PageRequest.of(0, 3);
 
-        List<SupplierDTO> result = supplierService.findAll();
+        Mockito.when(supplierRepository.findAll(mockPageable)).thenReturn(mockPage);
+
+        PaginationDTO<List<SupplierDTO>> result =
+                supplierService.findAll(mockPageable);
 
         Assertions.assertNotNull(result);
-        Assertions.assertEquals(3, result.size());
+        Assertions.assertEquals(3, result.getData().size());
 
         for (int i = 0; i < mockSuppliers.size(); i++) {
             Supplier mockEntity = mockSuppliers.get(i);
-            SupplierDTO entityDto = result.get(i);
+            SupplierDTO entityDto = result.getData().get(i);
 
             Assertions.assertEquals(mockEntity.getId(), entityDto.getId());
             Assertions.assertEquals(mockEntity.getCompanyName(), entityDto.getCompanyName());
         }
 
-        Mockito.verify(supplierRepository, Mockito.times(1)).findAll();
+        Mockito.verify(supplierRepository, Mockito.times(1))
+               .findAll(mockPageable);
     }
 
 
     @Test
-    void testFindAll_ReturnEmptyList() {
+    void testFindAll_ReturnPaginationDTOEmptyList() {
         List<Supplier> mockSuppliers = new ArrayList<>();
-        Mockito.when(supplierRepository.findAll()).thenReturn(mockSuppliers);
 
-        List<SupplierDTO> result = supplierService.findAll();
+        Page<Supplier> mockPage = new PageImpl<>(mockSuppliers);
+        Pageable mockPageable = PageRequest.of(0, 3);
+
+        Mockito.when(supplierRepository.findAll(mockPageable)).thenReturn(mockPage);
+
+
+        PaginationDTO<List<SupplierDTO>> result
+                = supplierService.findAll(mockPageable);
 
         Assertions.assertNotNull(result);
-        Assertions.assertTrue(result.isEmpty());
+        Assertions.assertTrue(result.getData().isEmpty());
 
-        Mockito.verify(supplierRepository, Mockito.times(1)).findAll();
+        Mockito.verify(supplierRepository, Mockito.times(1))
+               .findAll(mockPageable);
     }
 
     @Test

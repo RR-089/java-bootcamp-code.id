@@ -2,16 +2,18 @@ package com.codeid.be_eshopay.service.impl;
 
 import com.codeid.be_eshopay.exception.BadRequestException;
 import com.codeid.be_eshopay.exception.NotFoundException;
+import com.codeid.be_eshopay.model.dto.PaginationDTO;
 import com.codeid.be_eshopay.model.dto.ProductDTO;
 import com.codeid.be_eshopay.model.entity.Product;
 import com.codeid.be_eshopay.repository.ProductRepository;
 import com.codeid.be_eshopay.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -53,12 +55,19 @@ public class ProductServiceImpl implements ProductService {
 
 
     @Override
-    public List<ProductDTO> findAll() {
+    public PaginationDTO<List<ProductDTO>> findAll(Pageable pageable) {
         log.debug("request fetching data products");
 
-        return productRepository.findAll().stream()
-                                .map(ProductServiceImpl::mapToDto)
-                                .collect(Collectors.toList());
+        Page<Product> productPage = productRepository.findAll(pageable);
+
+        List<ProductDTO> productDtoList = productPage.stream()
+                                                     .map(ProductServiceImpl::mapToDto)
+                                                     .toList();
+
+        return PaginationDTO.<List<ProductDTO>>builder()
+                            .totalRecords(productPage.getTotalElements())
+                            .data(productDtoList)
+                            .build();
     }
 
     @Override

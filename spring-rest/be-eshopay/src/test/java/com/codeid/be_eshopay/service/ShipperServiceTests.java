@@ -2,6 +2,7 @@ package com.codeid.be_eshopay.service;
 
 import com.codeid.be_eshopay.exception.BadRequestException;
 import com.codeid.be_eshopay.exception.NotFoundException;
+import com.codeid.be_eshopay.model.dto.PaginationDTO;
 import com.codeid.be_eshopay.model.dto.ShipperDTO;
 import com.codeid.be_eshopay.model.entity.Shipper;
 import com.codeid.be_eshopay.repository.ShipperRepository;
@@ -13,6 +14,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 
 import java.util.ArrayList;
@@ -58,44 +63,56 @@ public class ShipperServiceTests {
 
 
     @Test
-    void testFindAll_ReturnShipperDTOList() {
+    void testFindAll_ReturnPaginationDTO() {
         List<Shipper> mockShippers = List.of(
                 Shipper.builder().id(1L).companyName("HP").phone("081").build(),
                 Shipper.builder().id(2L).companyName("LG").phone("082").build(),
                 Shipper.builder().id(3L).companyName("Sony").phone("083").build()
         );
 
-        Mockito.when(shipperRepository.findAll()).thenReturn(mockShippers);
+        Page<Shipper> mockPage = new PageImpl<>(mockShippers);
+        Pageable mockPageable = PageRequest.of(0, 3);
 
-        List<ShipperDTO> result = shipperService.findAll();
+        Mockito.when(shipperRepository.findAll(mockPageable)).thenReturn(mockPage);
+
+        PaginationDTO<List<ShipperDTO>> result =
+                shipperService.findAll(mockPageable);
+
 
         Assertions.assertNotNull(result);
-        Assertions.assertEquals(3, result.size());
+        Assertions.assertEquals(3, result.getData().size());
 
         for (int i = 0; i < mockShippers.size(); i++) {
             Shipper mockEntity = mockShippers.get(i);
-            ShipperDTO entityDto = result.get(i);
+            ShipperDTO entityDto = result.getData().get(i);
 
             Assertions.assertEquals(mockEntity.getId(), entityDto.getId());
             Assertions.assertEquals(mockEntity.getCompanyName(), entityDto.getCompanyName());
             Assertions.assertEquals(mockEntity.getPhone(), entityDto.getPhone());
         }
 
-        Mockito.verify(shipperRepository, Mockito.times(1)).findAll();
+        Mockito.verify(shipperRepository, Mockito.times(1))
+               .findAll(mockPageable);
 
     }
 
     @Test
-    void testFindAll_ReturnEmptyList() {
+    void testFindAll_ReturnPaginationDTOEmptyList() {
         List<Shipper> mockShippers = new ArrayList<>();
-        Mockito.when(shipperRepository.findAll()).thenReturn(mockShippers);
+        Page<Shipper> mockPage = new PageImpl<>(mockShippers);
+        Pageable mockPageable = PageRequest.of(0, 3);
 
-        List<ShipperDTO> result = shipperService.findAll();
+        Mockito.when(shipperRepository.findAll(mockPageable)).thenReturn(mockPage);
+
+        PaginationDTO<List<ShipperDTO>> result =
+                shipperService.findAll(mockPageable);
+
 
         Assertions.assertNotNull(result);
-        Assertions.assertTrue(result.isEmpty());
+        Assertions.assertTrue(result.getData().isEmpty());
 
-        Mockito.verify(shipperRepository, Mockito.times(1)).findAll();
+        Mockito.verify(shipperRepository, Mockito.times(1))
+               .findAll(mockPageable);
     }
 
     @Test

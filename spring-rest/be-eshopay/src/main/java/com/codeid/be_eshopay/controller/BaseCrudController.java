@@ -1,8 +1,10 @@
 package com.codeid.be_eshopay.controller;
 
+import com.codeid.be_eshopay.model.dto.PaginationDTO;
 import com.codeid.be_eshopay.model.dto.ResponseDTO;
 import com.codeid.be_eshopay.service.BaseCrudService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,14 +22,14 @@ public abstract class BaseCrudController<T, ID> {
     }
 
     @GetMapping
-    public ResponseEntity<ResponseDTO<List<T>>> getAll() {
-        List<T> data = getService().findAll();
+    public ResponseEntity<ResponseDTO<PaginationDTO<List<T>>>> getAll(Pageable pageable) {
+        PaginationDTO<List<T>> data = getService().findAll(pageable);
 
-        ResponseDTO<List<T>> response = ResponseDTO.<List<T>>builder()
-                                                   .status(HttpStatus.OK.value())
-                                                   .message("Fetch " + getEntityPluralName() + " successful")
-                                                   .data(data)
-                                                   .build();
+        ResponseDTO<PaginationDTO<List<T>>> response = ResponseDTO.<PaginationDTO<List<T>>>builder()
+                                                                  .status(HttpStatus.OK.value())
+                                                                  .message("Fetch " + getEntityPluralName() + " successful")
+                                                                  .data(data)
+                                                                  .build();
 
         return ResponseEntity.ok(response);
     }
