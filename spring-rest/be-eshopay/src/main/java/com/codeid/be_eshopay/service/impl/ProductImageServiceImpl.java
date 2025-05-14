@@ -48,11 +48,11 @@ public class ProductImageServiceImpl implements ProductImageService {
                            .id(productImage.getId())
                            .fileMetaData(FileMetaData
                                    .builder()
-                                   .fileName(productImage.getFileName())
-                                   .fileSize(productImage.getFileSize())
-                                   .fileType(productImage.getFileType())
-                                   .fileUri(productImage.getFileUri())
-                                   .index(productImage.getIndex())
+                                   .fileName(productImage.getFileMetaData().getFileName())
+                                   .fileSize(productImage.getFileMetaData().getFileSize())
+                                   .fileType(productImage.getFileMetaData().getFileType())
+                                   .fileUri(productImage.getFileMetaData().getFileUri())
+                                   .index(productImage.getFileMetaData().getIndex())
                                    .build())
                            .product(Product.builder().id(productImage.getProductId()).build())
                            .build();
