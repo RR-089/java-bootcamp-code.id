@@ -72,6 +72,21 @@ public class ProductImageServiceImpl implements ProductImageService {
         try {
             ProductDTO foundProduct = productService.findById(productId);
 
+            List<ProductImage> findExistingImages =
+                    productImageRepository.findByProductId(productId);
+
+            if (!findExistingImages.isEmpty()) {
+                this.deleteProductImages(productId,
+                        BulkDeleteProductImagesDTO.builder()
+                                                  .data(findExistingImages
+                                                          .stream()
+                                                          .map(productImage -> (
+                                                                  productImage.getFileMetaData().getFileUri()
+                                                          ))
+                                                          .toList())
+                                                  .build());
+            }
+
             List<FileMetaDataDTO> uploadedFiles = fileStorageService.bulkStoreFiles(dto.getData());
 
             List<ProductImage> productImages = uploadedFiles.stream()
