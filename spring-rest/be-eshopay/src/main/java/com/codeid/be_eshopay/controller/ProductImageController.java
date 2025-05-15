@@ -55,18 +55,17 @@ public class ProductImageController {
     @DeleteMapping(value = "{id}/bulk-delete")
     public ResponseEntity<ResponseDTO<Object>> bulkDeleteProductImages(@PathVariable(
             "id") Long id, @Valid @RequestBody BulkDeleteProductImagesDTO dto) {
-        HttpStatus status = HttpStatus.CREATED;
 
         productImageService.deleteProductImages(id, dto);
 
         ResponseDTO<Object> response = ResponseDTO.builder()
-                                                  .status(status.value())
+                                                  .status(HttpStatus.OK.value())
                                                   .message("Delete " +
                                                           "images successful")
                                                   .data(null)
                                                   .build();
 
-        return ResponseEntity.status(status).body(response);
+        return ResponseEntity.ok(response);
     }
 
 

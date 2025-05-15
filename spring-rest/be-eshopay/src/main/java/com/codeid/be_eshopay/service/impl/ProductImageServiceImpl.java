@@ -12,6 +12,7 @@ import com.codeid.be_eshopay.model.entity.ProductImage;
 import com.codeid.be_eshopay.repository.ProductImageRepository;
 import com.codeid.be_eshopay.service.FileStorageService;
 import com.codeid.be_eshopay.service.ProductImageService;
+import com.codeid.be_eshopay.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,7 @@ import java.util.List;
 public class ProductImageServiceImpl implements ProductImageService {
     private final ProductImageRepository productImageRepository;
     private final FileStorageService fileStorageService;
-    private final ProductServiceImpl productService;
+    private final ProductService productService;
 
 
     public static ProductImageDTO mapToDto(ProductImage productImage) {

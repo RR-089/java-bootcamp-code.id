@@ -153,8 +153,7 @@ public class FileStorageServiceImpl implements FileStorageService {
         for (String uri : uris) {
             try {
                 String fileName = Paths.get(new URI(uri).getPath()).getFileName().toString();
-                System.out.println(fileName);
-                
+
                 this.deleteFile(fileName);
             } catch (IOException ex) {
                 throw new RuntimeException("Could not delete file for URI " + uri + ". Please try again!", ex);
