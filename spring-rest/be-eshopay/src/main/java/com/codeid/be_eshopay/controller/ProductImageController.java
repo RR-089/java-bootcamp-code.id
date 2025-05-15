@@ -19,6 +19,22 @@ import java.util.List;
 public class ProductImageController {
     private final ProductImageService productImageService;
 
+    @GetMapping("/{id}/images")
+    public ResponseEntity<ResponseDTO<List<ProductImageDTO>>> findProductImages(@PathVariable(
+            "id") Long id) {
+
+        List<ProductImageDTO> data = productImageService.getAllProductImages(id);
+
+        ResponseDTO<List<ProductImageDTO>> response = ResponseDTO.<List<ProductImageDTO>>builder()
+                                                                 .status(HttpStatus.OK.value())
+                                                                 .message("Get images " +
+                                                                         "successful")
+                                                                 .data(data)
+                                                                 .build();
+
+        return ResponseEntity.ok(response);
+    }
+
     @PostMapping(value = "{id}/bulk-upload", consumes = "multipart/form-data")
     public ResponseEntity<ResponseDTO<List<ProductImageDTO>>> bulkUploadProductImages(@PathVariable(
             "id") Long id, @Valid @ModelAttribute BulkUploadProductImagesDTO dto) {
