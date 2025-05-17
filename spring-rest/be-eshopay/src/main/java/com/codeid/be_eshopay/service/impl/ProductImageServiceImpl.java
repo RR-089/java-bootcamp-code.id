@@ -16,6 +16,7 @@ import com.codeid.be_eshopay.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -68,6 +69,7 @@ public class ProductImageServiceImpl implements ProductImageService {
     }
 
     @Override
+    @Transactional
     public List<ProductImageDTO> uploadProductImages(Long productId, BulkUploadProductImagesDTO dto) {
         try {
             ProductDTO foundProduct = productService.findById(productId);
@@ -110,6 +112,7 @@ public class ProductImageServiceImpl implements ProductImageService {
     }
 
     @Override
+    @Transactional
     public void deleteProductImages(Long productId, BulkDeleteProductImagesDTO dto) {
         try {
             productService.findById(productId);
