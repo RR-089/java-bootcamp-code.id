@@ -16,5 +16,6 @@ public abstract class AbstractEntity {
     private Instant createdDate;
 
     @UpdateTimestamp
+    @Column(name = "modified_date")
     private Instant modifiedDate;
 }
