@@ -11,18 +11,8 @@ import lombok.*;
 @Entity
 @Table(name = "cart_items", schema = "oe")
 public class CartItem extends AbstractEntity {
-    @Id
-    @SequenceGenerator(
-            name = "cart_item_seq_gen",
-            sequenceName = "oe.cart_items_cart_item_id_seq",
-            allocationSize = 1
-    )
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "cart_item_seq_gen"
-    )
-    @Column(name = "cart_item_id")
-    private Long id;
+    @EmbeddedId
+    private CartItemKey id;
 
     @Column(name = "quantity")
     private Integer quantity;
@@ -33,13 +23,14 @@ public class CartItem extends AbstractEntity {
     @Column(name = "discount")
     private Double discount;
 
-    @OneToOne
+    @ManyToOne
+    @MapsId("productId")
     @JoinColumn(name = "product_id", referencedColumnName = "product_id")
     private Product product;
 
-    @OneToOne
+    @ManyToOne
+    @MapsId("cartId")
     @JoinColumn(name = "cart_id", referencedColumnName = "cart_id")
     private Cart cart;
-
 
 }

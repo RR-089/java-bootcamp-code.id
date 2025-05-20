@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -54,6 +55,16 @@ public class ProductServiceImpl implements ProductService {
                       .build();
     }
 
+    private GetProductResponseDTO mapToProductResponseDTO(Product product) {
+        return GetProductResponseDTO.builder()
+                                    .id(product.getId())
+                                    .name(product.getName())
+                                    .unitsInStock(product.getUnitsInStock())
+                                    .unitPrice(product.getUnitPrice())
+                                    .thumbnailPicture(product.getThumbnailPicture())
+                                    .build();
+    }
+
 
     @Override
     public PaginationDTO<List<ProductDTO>> findAll(Pageable pageable) {
@@ -80,20 +91,20 @@ public class ProductServiceImpl implements ProductService {
         List<GetProductResponseDTO> productDTOList = productPage
                 .getContent()
                 .stream()
-                .map((Product product) -> GetProductResponseDTO
-                        .builder()
-                        .id(product.getId())
-                        .name(product.getName())
-                        .unitsInStock(product.getUnitsInStock())
-                        .unitPrice(product.getUnitPrice())
-                        .thumbnailPicture(product.getThumbnailPicture())
-                        .build())
+                .map(this::mapToProductResponseDTO)
                 .toList();
 
         return PaginationDTO.<List<GetProductResponseDTO>>builder()
                             .totalRecords(productPage.getTotalElements())
                             .data(productDTOList)
                             .build();
+    }
+
+    @Override
+    public List<Product> findProductsByIds(List<Long> ids) {
+        validateIfProductsExist(ids);
+
+        return productRepository.findByIdIn(ids);
     }
 
     @Override
@@ -158,5 +169,21 @@ public class ProductServiceImpl implements ProductService {
                 );
 
         productRepository.deleteById(id);
+    }
+
+    private void validateIfProductsExist(List<Long> ids) {
+        List<Long> notFoundProductIds = new ArrayList<>();
+        boolean someNotFound = false;
+
+        for (Long id : ids) {
+            if (!productRepository.existsById(id)) {
+                notFoundProductIds.add(id);
+                someNotFound = true;
+            }
+        }
+
+        if (someNotFound) {
+            throw new BadRequestException("Some products not exist", notFoundProductIds);
+        }
     }
 }

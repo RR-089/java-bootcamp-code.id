@@ -1,8 +1,11 @@
 package com.codeid.be_eshopay.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -58,4 +61,8 @@ public class Product extends AbstractEntity {
     @ManyToOne()
     @JoinColumn(name = "category_id")
     private Category category;
+
+    @JsonIgnoreProperties("product")
+    @OneToMany(mappedBy = "product")
+    private List<CartItem> cartItems;
 }
