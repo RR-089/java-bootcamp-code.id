@@ -1,4 +1,4 @@
-package com.codeid.be_eshopay.model.dto.request.cartitem;
+package com.codeid.be_eshopay.model.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;

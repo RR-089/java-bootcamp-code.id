@@ -1,6 +1,6 @@
 package com.codeid.be_eshopay.model.dto.response.cartitem;
 
-import com.codeid.be_eshopay.model.dto.request.cartitem.CartItemKeyDTO;
+import com.codeid.be_eshopay.model.dto.CartItemKeyDTO;
 import com.codeid.be_eshopay.model.dto.request.cartitem.CartItemSupplierDTO;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
