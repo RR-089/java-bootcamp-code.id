@@ -1,19 +1,26 @@
 package com.codeid.be_eshopay.controller;
 
+import com.codeid.be_eshopay.model.dto.PaginationDTO;
 import com.codeid.be_eshopay.model.dto.ProductDTO;
 import com.codeid.be_eshopay.model.dto.ResponseDTO;
+import com.codeid.be_eshopay.model.dto.response.product.GetProductResponseDTO;
 import com.codeid.be_eshopay.service.BaseCrudService;
 import com.codeid.be_eshopay.service.FileStorageService;
 import com.codeid.be_eshopay.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/products")
@@ -30,6 +37,25 @@ public class ProductController extends BaseMultipartAndCrudController<ProductDTO
     @Override
     protected String getEntityName() {
         return "product";
+    }
+
+    @GetMapping(value = "/search")
+    public ResponseEntity<ResponseDTO<PaginationDTO<List<GetProductResponseDTO>>>>
+    getProductPaginationAndSearch(
+            @RequestParam(value = "search", required = false) String search,
+            Pageable pageable
+    ) {
+        PaginationDTO<List<GetProductResponseDTO>> data = productService.findAllWithSearch(search,
+                pageable);
+
+        ResponseDTO<PaginationDTO<List<GetProductResponseDTO>>> response =
+                ResponseDTO.<PaginationDTO<List<GetProductResponseDTO>>>builder()
+                           .status(HttpStatus.OK.value())
+                           .message("Get products successful")
+                           .data(data)
+                           .build();
+
+        return ResponseEntity.ok(response);
     }
 
     @Override

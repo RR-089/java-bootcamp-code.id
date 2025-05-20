@@ -4,6 +4,7 @@ import com.codeid.be_eshopay.exception.BadRequestException;
 import com.codeid.be_eshopay.exception.NotFoundException;
 import com.codeid.be_eshopay.model.dto.PaginationDTO;
 import com.codeid.be_eshopay.model.dto.ProductDTO;
+import com.codeid.be_eshopay.model.dto.response.product.GetProductResponseDTO;
 import com.codeid.be_eshopay.model.entity.Product;
 import com.codeid.be_eshopay.repository.ProductRepository;
 import com.codeid.be_eshopay.service.ProductService;
@@ -67,6 +68,31 @@ public class ProductServiceImpl implements ProductService {
         return PaginationDTO.<List<ProductDTO>>builder()
                             .totalRecords(productPage.getTotalElements())
                             .data(productDtoList)
+                            .build();
+    }
+
+    @Override
+    public PaginationDTO<List<GetProductResponseDTO>> findAllWithSearch(String search, Pageable pageable) {
+        log.debug("request fetching data products with search");
+
+        Page<Product> productPage = productRepository.findAllWithSearch(search, pageable);
+
+        List<GetProductResponseDTO> productDTOList = productPage
+                .getContent()
+                .stream()
+                .map((Product product) -> GetProductResponseDTO
+                        .builder()
+                        .id(product.getId())
+                        .name(product.getName())
+                        .unitsInStock(product.getUnitsInStock())
+                        .unitPrice(product.getUnitPrice())
+                        .thumbnailPicture(product.getThumbnailPicture())
+                        .build())
+                .toList();
+
+        return PaginationDTO.<List<GetProductResponseDTO>>builder()
+                            .totalRecords(productPage.getTotalElements())
+                            .data(productDTOList)
                             .build();
     }
 
