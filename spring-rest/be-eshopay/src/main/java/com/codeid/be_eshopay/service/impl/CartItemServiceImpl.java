@@ -84,15 +84,6 @@ public class CartItemServiceImpl implements CartItemService {
                 .toList();
     }
 
-    @Override
-    public GetCartItemResponseDTO findCartItemById(CartItemKeyDTO id) {
-        return cartItemRepository.findById(CartItemKey.builder()
-
-                                                      .build())
-                                 .map(this::mapToCartItemResponseDto)
-                                 .orElseThrow(() -> new NotFoundException("Cart item with id: " + id +
-                                         " not found", null));
-    }
 
     @Override
     public CartItem findCartItemEntityById(CartItemKeyDTO id) {

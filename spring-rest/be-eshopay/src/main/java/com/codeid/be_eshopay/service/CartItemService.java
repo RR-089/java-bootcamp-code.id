@@ -11,8 +11,6 @@ import java.util.List;
 public interface CartItemService {
     List<GetCartItemResponseDTO> findAllCartItems();
 
-    GetCartItemResponseDTO findCartItemById(CartItemKeyDTO id);
-
     CartItem findCartItemEntityById(CartItemKeyDTO id);
 
     List<GetCartItemResponseDTO> bulkCreateItems(BulkCreateItemsRequestDTO dto);
@@ -25,5 +23,5 @@ public interface CartItemService {
 
     List<CartItem> findCartItemByIds(List<CartItemKeyDTO> ids);
 
-    
+
 }
