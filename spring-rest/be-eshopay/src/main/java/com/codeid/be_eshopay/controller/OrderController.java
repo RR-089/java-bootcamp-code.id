@@ -18,8 +18,7 @@ public class OrderController {
     private final OrderService orderService;
 
 
-    @GetMapping
-    @RequestMapping("{id}")
+    @GetMapping(value = "{id}")
     public ResponseEntity<ResponseDTO<GetOrderByIdResponseDTO>> createOrder(
             @PathVariable("id") Long id
     ) {
@@ -54,7 +53,7 @@ public class OrderController {
         return ResponseEntity.status(status).body(response);
     }
 
-    @PostMapping("/pre-order")
+    @PostMapping(value = "pre-order")
     public ResponseEntity<ResponseDTO<GetOrderResponseDTO>> createPreOrderData(
             @Valid @RequestBody CreateOrderDTO dto
     ) {

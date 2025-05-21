@@ -53,8 +53,7 @@ public class CartItemController {
         return ResponseEntity.status(status).body(response);
     }
 
-    @PatchMapping
-    @RequestMapping("/quantity")
+    @PatchMapping(value = "quantity")
     public ResponseEntity<ResponseDTO<GetCartItemResponseDTO>>
     updateCartItemQuantity(
             @Valid @RequestBody UpdateQuantityRequestDTO dto) {
