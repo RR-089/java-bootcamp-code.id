@@ -104,7 +104,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public GetOrderResponseDTO createOrderData(CreateOrderDTO dto, boolean preOrder) {
+    public GetOrderResponseDTO createOrderData(CreateOrderDTO dto) {
         //TODO: Fetch this from auth later
         Long userId = 303L;
 
@@ -191,29 +191,26 @@ public class OrderServiceImpl implements OrderService {
         totalPrice += orderShipment.getFreight();
         finalPrice += orderShipment.getFreight();
 
-        GetOrderResponseDTO result =
-                GetOrderResponseDTO
-                        .builder()
-                        .paymentType(dto.getPaymentType() != null ? dto.getPaymentType() : PaymentType.TRANSFER)
-                        .supplier(orderSupplier)
-                        .user(orderUser)
-                        .location(orderLocation)
-                        .shipment(orderShipment)
-                        .items(items)
-                        .totalPrice(NumberUtil.roundedDouble(totalPrice))
-                        .totalDiscount(NumberUtil.roundedDouble(totalDiscount))
-                        .finalPrice(NumberUtil.roundedDouble(finalPrice))
-                        .build();
+        return GetOrderResponseDTO
+                .builder()
+                .paymentType(dto.getPaymentType() != null ? dto.getPaymentType() : PaymentType.TRANSFER)
+                .supplier(orderSupplier)
+                .user(orderUser)
+                .location(orderLocation)
+                .shipment(orderShipment)
+                .items(items)
+                .totalPrice(NumberUtil.roundedDouble(totalPrice))
+                .totalDiscount(NumberUtil.roundedDouble(totalDiscount))
+                .finalPrice(NumberUtil.roundedDouble(finalPrice))
+                .build();
 
-        if (preOrder) {
-            return result;
-        }
-
-        return saveOrderData(result);
     }
 
     @Override
-    public GetOrderResponseDTO saveOrderData(GetOrderResponseDTO poData) {
+    @Transactional
+    public GetOrderByIdResponseDTO saveOrderData(CreateOrderDTO dto) {
+        GetOrderResponseDTO poData = this.createOrderData(dto);
+
         productService.bulkUpdateAddProductsOnOrder(
                 BulkUpdateProductsOnOrderDTO
                         .builder()
@@ -292,9 +289,24 @@ public class OrderServiceImpl implements OrderService {
                                          .build()
         );
 
-        poData.setId(createdOrder.getId());
 
-        return poData;
+        return GetOrderByIdResponseDTO.builder()
+                                      .id(newOrder.getId())
+                                      .paymentType(newOrder.getPaymentType())
+                                      .supplier(poData.getSupplier())
+                                      .user(poData.getUser())
+                                      .location(poData.getLocation())
+                                      .shipment(poData.getShipment())
+                                      .items(
+                                              createdOrderDetails
+                                                      .stream()
+                                                      .map(this::mapOrderDetailToCreatedOrderItemDTO)
+                                                      .toList()
+                                      )
+                                      .totalPrice(poData.getTotalPrice())
+                                      .totalDiscount(poData.getTotalDiscount())
+                                      .finalPrice(poData.getFinalPrice())
+                                      .build();
     }
 
 

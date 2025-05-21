@@ -5,9 +5,10 @@ import com.codeid.be_eshopay.model.dto.response.order.GetOrderByIdResponseDTO;
 import com.codeid.be_eshopay.model.dto.response.order.GetOrderResponseDTO;
 
 public interface OrderService {
-    GetOrderResponseDTO createOrderData(CreateOrderDTO dto, boolean preOrder);
+    GetOrderResponseDTO createOrderData(CreateOrderDTO dto);
+
+    GetOrderByIdResponseDTO saveOrderData(CreateOrderDTO dto);
 
     GetOrderByIdResponseDTO findById(Long id);
 
-    GetOrderResponseDTO saveOrderData(GetOrderResponseDTO poData);
 }

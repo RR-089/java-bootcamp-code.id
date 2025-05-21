@@ -37,15 +37,15 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<ResponseDTO<GetOrderResponseDTO>> createOrder(
+    public ResponseEntity<ResponseDTO<GetOrderByIdResponseDTO>> createOrder(
             @Valid @RequestBody CreateOrderDTO dto
     ) {
         HttpStatus status = HttpStatus.CREATED;
 
-        GetOrderResponseDTO data = orderService.createOrderData(dto, false);
+        GetOrderByIdResponseDTO data = orderService.saveOrderData(dto);
 
-        ResponseDTO<GetOrderResponseDTO> response =
-                ResponseDTO.<GetOrderResponseDTO>builder()
+        ResponseDTO<GetOrderByIdResponseDTO> response =
+                ResponseDTO.<GetOrderByIdResponseDTO>builder()
                            .status(status.value())
                            .message("Create order data successful")
                            .data(data)
@@ -60,7 +60,7 @@ public class OrderController {
     ) {
         HttpStatus status = HttpStatus.CREATED;
 
-        GetOrderResponseDTO data = orderService.createOrderData(dto, true);
+        GetOrderResponseDTO data = orderService.createOrderData(dto);
 
         ResponseDTO<GetOrderResponseDTO> response =
                 ResponseDTO.<GetOrderResponseDTO>builder()
