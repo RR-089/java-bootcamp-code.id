@@ -121,10 +121,8 @@ public class OrderServiceImpl implements OrderService {
             throw new BadRequestException("All items must belong to the same supplier", null);
         }
 
-        //TODO masalah
         List<CartItem> cartItems = cartItemService
                 .findCartItemByIds(dto.getCartItemIds());
-
 
         List<OrderItemDTO> items = cartItems
                 .stream()
