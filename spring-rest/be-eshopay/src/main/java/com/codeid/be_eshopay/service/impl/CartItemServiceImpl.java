@@ -9,10 +9,7 @@ import com.codeid.be_eshopay.model.dto.request.cartitem.BulkDeleteItemsRequestDT
 import com.codeid.be_eshopay.model.dto.request.cartitem.CartItemSupplierDTO;
 import com.codeid.be_eshopay.model.dto.request.cartitem.ItemDTO;
 import com.codeid.be_eshopay.model.dto.response.cartitem.GetCartItemResponseDTO;
-import com.codeid.be_eshopay.model.entity.Cart;
-import com.codeid.be_eshopay.model.entity.CartItem;
-import com.codeid.be_eshopay.model.entity.CartItemKey;
-import com.codeid.be_eshopay.model.entity.Product;
+import com.codeid.be_eshopay.model.entity.*;
 import com.codeid.be_eshopay.repository.CartItemRepository;
 import com.codeid.be_eshopay.service.CartItemService;
 import com.codeid.be_eshopay.service.ProductService;
@@ -22,12 +19,20 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class CartItemServiceImpl implements CartItemService {
     private final CartItemRepository cartItemRepository;
     private final ProductService productService;
+
+    public static Double calculateDiscountedPrice(Double price, Double discount) {
+        return discount > 0 && discount != null ?
+                price * (1 - discount)
+                : price;
+    }
 
     private CartItemKeyDTO mapCartItemKeyToDto(CartItemKey entity) {
         return CartItemKeyDTO.builder()
@@ -53,9 +58,9 @@ public class CartItemServiceImpl implements CartItemService {
                 .unitPrice(entity.getUnitPrice())
                 .discount(entity.getDiscount())
                 .discountedUnitPrice(
-                        entity.getDiscount() > 0 && entity.getDiscount() != null ?
-                                entity.getUnitPrice() * (1 - entity.getDiscount())
-                                : entity.getUnitPrice())
+                        calculateDiscountedPrice(entity.getUnitPrice(),
+                                entity.getDiscount())
+                )
                 .supplier(
                         CartItemSupplierDTO
                                 .builder()
@@ -200,5 +205,30 @@ public class CartItemServiceImpl implements CartItemService {
         if (someNotFound) {
             throw new BadRequestException("Some items not exist", notFoundCartItemIds);
         }
+    }
+
+    @Override
+    public boolean isCartItemsSameSupplier(List<CartItemKeyDTO> ids) {
+        List<CartItem> foundItems = this.findCartItemByIds(ids);
+
+        if (foundItems.size() != ids.size()) {
+            validateIfCartItemsExist(ids);
+        }
+
+        Set<Supplier> uniqueSuppliers = foundItems
+                .stream()
+                .map(cartItem -> cartItem.getProduct().getSupplier())
+                .collect(Collectors.toSet());
+
+        return uniqueSuppliers.size() == 1;
+    }
+
+    @Override
+    public List<CartItem> findCartItemByIds(List<CartItemKeyDTO> ids) {
+        return cartItemRepository.findByIdIn(ids
+                .stream()
+                .map(this::mapCartItemKeyToEntity)
+                .toList());
+
     }
 }

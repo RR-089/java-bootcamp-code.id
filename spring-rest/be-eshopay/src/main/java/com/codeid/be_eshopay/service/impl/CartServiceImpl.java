@@ -15,7 +15,8 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public Cart findCartByUserId(Long userId) {
-        return cartRepository.findByUserId(userId).orElse(createCart(userId));
+        return cartRepository.findByUserId(userId)
+                             .orElseGet(() -> createCart(userId));
     }
 
     @Override

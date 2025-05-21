@@ -20,4 +20,10 @@ public interface CartItemService {
     GetCartItemResponseDTO updateCartItemQuantity(CartItemKeyDTO id, Integer quantity);
 
     void bulkDeleteItems(BulkDeleteItemsRequestDTO dto);
+
+    boolean isCartItemsSameSupplier(List<CartItemKeyDTO> ids);
+
+    List<CartItem> findCartItemByIds(List<CartItemKeyDTO> ids);
+
+    
 }

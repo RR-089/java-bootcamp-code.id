@@ -1,9 +1,12 @@
 package com.codeid.be_eshopay.service.impl;
 
+import com.codeid.be_eshopay.constant.UpdateProductOnOrderType;
 import com.codeid.be_eshopay.exception.BadRequestException;
+import com.codeid.be_eshopay.exception.InternalServerException;
 import com.codeid.be_eshopay.exception.NotFoundException;
 import com.codeid.be_eshopay.model.dto.PaginationDTO;
 import com.codeid.be_eshopay.model.dto.ProductDTO;
+import com.codeid.be_eshopay.model.dto.request.product.BulkUpdateProductsOnOrderDTO;
 import com.codeid.be_eshopay.model.dto.response.product.GetProductResponseDTO;
 import com.codeid.be_eshopay.model.entity.Product;
 import com.codeid.be_eshopay.repository.ProductRepository;
@@ -169,6 +172,37 @@ public class ProductServiceImpl implements ProductService {
                 );
 
         productRepository.deleteById(id);
+    }
+
+    @Override
+    public void bulkUpdateAddProductsOnOrder(BulkUpdateProductsOnOrderDTO dto) {
+        List<Product> products = this.findProductsByIds(dto
+                .getData()
+                .stream()
+                .map(updateDto -> updateDto.getId())
+                .toList());
+
+        for (Product foundProduct : products) {
+            Integer quantity = dto.getData()
+                                  .stream()
+                                  .filter((product) -> product.getId().equals(foundProduct.getId()))
+                                  .map((updateProductDTO -> updateProductDTO.getQuantity()))
+                                  .findFirst()
+                                  .orElseThrow(() ->
+                                          new InternalServerException("Cannot get " +
+                                                  "quantity", null)
+                                  );
+
+            if (dto.getType().equals(UpdateProductOnOrderType.INCREMENT)) {
+                foundProduct.setUnitsOnOrder(foundProduct.getUnitsOnOrder() + quantity);
+                foundProduct.setUnitsInStock(foundProduct.getUnitsInStock() - quantity);
+            } else {
+                foundProduct.setUnitsOnOrder(foundProduct.getUnitsOnOrder() - quantity);
+            }
+        }
+
+        productRepository.saveAll(products);
+
     }
 
     private void validateIfProductsExist(List<Long> ids) {

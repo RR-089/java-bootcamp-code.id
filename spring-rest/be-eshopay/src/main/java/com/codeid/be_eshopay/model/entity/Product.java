@@ -64,5 +64,9 @@ public class Product extends AbstractEntity {
 
     @JsonIgnoreProperties("product")
     @OneToMany(mappedBy = "product")
+    private List<ProductImage> productImages;
+
+    @JsonIgnoreProperties("product")
+    @OneToMany(mappedBy = "product")
     private List<CartItem> cartItems;
 }
