@@ -182,6 +182,9 @@ public class ProductServiceImpl implements ProductService {
                 .map(updateDto -> updateDto.getId())
                 .toList());
 
+        List<Long> exceededStockProductIds = new ArrayList<>();
+        boolean isExceedStockProduct = false;
+
         for (Product foundProduct : products) {
             Integer quantity = dto.getData()
                                   .stream()
@@ -194,11 +197,23 @@ public class ProductServiceImpl implements ProductService {
                                   );
 
             if (dto.getType().equals(UpdateProductOnOrderType.INCREMENT)) {
+                Integer currentStock = foundProduct.getUnitsInStock();
+
+                if (currentStock < quantity) {
+                    isExceedStockProduct = true;
+                    exceededStockProductIds.add(foundProduct.getId());
+                }
+
                 foundProduct.setUnitsOnOrder(foundProduct.getUnitsOnOrder() + quantity);
-                foundProduct.setUnitsInStock(foundProduct.getUnitsInStock() - quantity);
+                foundProduct.setUnitsInStock(currentStock - quantity);
             } else {
                 foundProduct.setUnitsOnOrder(foundProduct.getUnitsOnOrder() - quantity);
             }
+        }
+
+        if (isExceedStockProduct && !exceededStockProductIds.isEmpty()) {
+            throw new BadRequestException("One or more product quantities exceed the available stock",
+                    exceededStockProductIds);
         }
 
         productRepository.saveAll(products);

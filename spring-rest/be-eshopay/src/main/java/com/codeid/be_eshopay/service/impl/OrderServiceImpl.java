@@ -7,6 +7,7 @@ import com.codeid.be_eshopay.exception.InternalServerException;
 import com.codeid.be_eshopay.exception.NotFoundException;
 import com.codeid.be_eshopay.model.dto.CartItemKeyDTO;
 import com.codeid.be_eshopay.model.dto.OrderDetailKeyDTO;
+import com.codeid.be_eshopay.model.dto.request.cartitem.BulkDeleteItemsRequestDTO;
 import com.codeid.be_eshopay.model.dto.request.order.CreateOrderDTO;
 import com.codeid.be_eshopay.model.dto.request.product.BulkUpdateProductsOnOrderDTO;
 import com.codeid.be_eshopay.model.dto.request.product.UpdateProductOnOrderDTO;
@@ -255,7 +256,6 @@ public class OrderServiceImpl implements OrderService {
 
         Order createdOrder = orderRepository.save(newOrder);
 
-
         List<OrderDetail> orderDetails =
                 poData.getItems()
                       .stream()
@@ -280,6 +280,17 @@ public class OrderServiceImpl implements OrderService {
 
         List<OrderDetail> createdOrderDetails =
                 orderDetailService.createAll(orderDetails);
+
+        cartItemService.bulkDeleteItems(
+                BulkDeleteItemsRequestDTO.builder()
+                                         .cartItemIds(
+                                                 poData.getItems()
+                                                       .stream()
+                                                       .map((OrderItemDTO::getId))
+                                                       .toList()
+                                         )
+                                         .build()
+        );
 
         poData.setId(createdOrder.getId());
 
