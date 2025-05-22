@@ -103,7 +103,6 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    @Transactional
     public GetOrderResponseDTO createOrderData(CreateOrderDTO dto) {
         //TODO: Fetch this from auth later
         Long userId = 303L;
